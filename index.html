@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>대가식당</title>
+  <meta name="description" content="서울 광진구 대가식당 픽업, 배달 주문">
+  <meta name="theme-color" content="#8E1B24">
+  <!-- 미리보기 동안 검색엔진에 안 잡히게. 정식 오픈할 때 이 줄 지우기 -->
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <style>
+    /* ===== 색과 글꼴 =====
+       정육 진열장의 붉은 조명, 등급 판정 도장의 보라 잉크, 스테인리스와 흰 타일에서 가져온 색 */
+    :root {
+      --red: #8E1B24;
+      --red-dark: #6B1219;
+      --red-tint: #FBF1F1;
+      --ink: #4A3B96;
+      --steel: #556063;
+      --line: #E3E6E4;
+      --field: #CDD2D0;
+      --bg: #F5F7F6;
+      --card: #FFFFFF;
+      --text: #1E2224;
+      --muted: #6B7477;
+      --font: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      --display: "Black Han Sans", var(--font);
+    }
+
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      font-family: var(--font);
+      font-size: 16px;
+      line-height: 1.55;
+      color: var(--text);
+      background: var(--bg);
+      word-break: keep-all;
+    }
+    button, input, select, textarea { font: inherit; color: inherit; }
+    img { display: block; max-width: 100%; }
+    :focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+    .wrap { max-width: 1040px; margin: 0 auto; padding: 0 16px; }
+
+    .preview-bar { padding: 8px 16px; background: #FFF1C9; color: #5A4300; font-size: 13px; font-weight: 600; text-align: center; }
+
+    /* ===== 상단 바 ===== */
+    .topbar {
+      position: sticky; top: 0; z-index: 30;
+      background: rgba(245, 247, 246, .94);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--line);
+    }
+    .topbar .wrap { display: flex; align-items: center; justify-content: space-between; height: 56px; }
+    .brand { font-family: var(--display); font-size: 23px; color: var(--red); text-decoration: none; }
+    .top-actions { display: flex; gap: 8px; }
+    .icon-btn {
+      position: relative; display: inline-flex; align-items: center; justify-content: center;
+      width: 42px; height: 42px; border-radius: 50%;
+      border: 1px solid var(--line); background: var(--card); color: var(--text);
+      cursor: pointer; text-decoration: none;
+    }
+    .icon-btn svg { width: 20px; height: 20px; }
+    .badge {
+      position: absolute; top: -4px; right: -4px;
+      min-width: 20px; height: 20px; padding: 0 6px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--red); color: #fff; font-size: 12px; font-weight: 700;
+    }
+
+    /* ===== 간판 (히어로) ===== */
+    /* 간판 사진 위에 글자를 올리면 간판이 가려져서, 사진과 글을 나눠 배치 */
+    .hero { color: #fff; background: #2A1013; }
+    .hero-inner { display: grid; gap: 22px; padding-top: 16px; padding-bottom: 32px; }
+    .hero-photo { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; border-radius: 16px; }
+    .hero h1 { font-family: var(--display); font-weight: 400; font-size: clamp(60px, 16vw, 112px); line-height: .95; margin: 0 0 14px; }
+    .hero p { margin: 0; font-size: 17px; max-width: 30em; opacity: .94; }
+    .hero .hero-trust { margin: 0 0 8px; font-family: var(--display); font-size: clamp(19px, 5vw, 24px); color: #F2C9CC; opacity: 1; }
+    .hero-meta { list-style: none; padding: 0; margin: 16px 0 0; display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 14px; opacity: .9; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+
+    /* ===== 버튼 ===== */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-height: 48px; padding: 0 20px; border-radius: 12px;
+      border: 1.5px solid transparent; font-size: 16px; font-weight: 700;
+      text-decoration: none; cursor: pointer;
+    }
+    .btn.block { display: flex; width: 100%; }
+    .btn.block + .btn.block { margin-top: 10px; }
+    .btn-primary { background: var(--red); color: #fff; }
+    .btn-primary:hover { background: var(--red-dark); }
+    .btn-outline { background: #fff; color: var(--text); border-color: var(--field); }
+    .btn-light { background: #fff; color: var(--red); }
+    .btn-ghost { background: transparent; color: #fff; border-color: rgba(255, 255, 255, .6); }
+
+    /* ===== 분류 탭 ===== */
+    .tabs { position: sticky; top: 56px; z-index: 20; background: var(--bg); border-bottom: 1px solid var(--line); }
+    .tabs .wrap { display: flex; gap: 8px; overflow-x: auto; padding-top: 10px; padding-bottom: 10px; scrollbar-width: none; }
+    .tabs .wrap::-webkit-scrollbar { display: none; }
+    .tab {
+      flex: none; padding: 8px 16px; border-radius: 999px;
+      border: 1px solid var(--line); background: var(--card);
+      font-size: 15px; font-weight: 600; cursor: pointer;
+    }
+    .tab[aria-pressed="true"] { background: var(--text); border-color: var(--text); color: #fff; }
+
+    /* ===== 차림표 ===== */
+    .menu { padding-top: 4px; padding-bottom: 48px; scroll-margin-top: 112px; }
+    .cat-title { font-family: var(--display); font-weight: 400; font-size: 27px; margin: 28px 0 12px; }
+    .items { display: grid; grid-template-columns: 1fr; gap: 12px; }
+    .item {
+      display: grid; grid-template-columns: 112px 1fr; gap: 14px;
+      padding: 14px; background: var(--card);
+      border: 1px solid var(--line); border-radius: 18px;
+    }
+    .thumb { position: relative; width: 112px; height: 112px; border-radius: 12px; overflow: hidden; background: #EFE6E3; }
+    .thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .thumb.noimg::after {
+      content: attr(data-emoji);
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center; font-size: 44px;
+    }
+    .item.soldout .thumb img { filter: grayscale(1); opacity: .6; }
+    .soldout-tag {
+      position: absolute; left: 0; right: 0; bottom: 0; padding: 4px 0;
+      background: rgba(30, 34, 36, .82); color: #fff;
+      text-align: center; font-size: 13px; font-weight: 700;
+    }
+
+    /* 등급 판정 도장 */
+    .stamp {
+      position: absolute; top: 6px; left: 6px;
+      width: 50px; height: 50px; border-radius: 50%;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      color: var(--ink); background: rgba(255, 255, 255, .88);
+      border: 2px solid var(--ink);
+      box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .88), inset 0 0 0 3px var(--ink);
+      transform: rotate(-10deg);
+      line-height: 1; font-weight: 800;
+    }
+    .stamp small { font-size: 9px; margin-bottom: 2px; }
+    .stamp b { font-size: 16px; font-weight: 900; }
+
+    .item-body { display: flex; flex-direction: column; min-width: 0; }
+    .item-name { margin: 0; font-size: 17px; font-weight: 700; }
+    .item-origin { margin: 2px 0 6px; font-size: 13px; color: var(--muted); }
+    .item-desc { margin: 0 0 10px; font-size: 14px; color: var(--steel); }
+    .unit { margin: 0 0 10px; font-size: 14px; font-weight: 600; color: var(--steel); }
+    .item-foot { margin-top: auto; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .price { font-size: 18px; font-weight: 800; font-variant-numeric: tabular-nums; }
+    .price.pending { font-size: 15px; font-weight: 600; color: var(--muted); }
+    .item-control { flex: none; }
+    .qty-card { border-color: var(--red); }
+    .qty-card button { color: var(--red); font-weight: 700; }
+    .qty-card span { min-width: 32px; }
+    .add-btn {
+      flex: none; padding: 9px 18px; border: 0; border-radius: 10px;
+      background: var(--red); color: #fff; font-weight: 700; cursor: pointer;
+    }
+    .add-btn:hover { background: var(--red-dark); }
+    .add-btn:disabled { background: #C8CDCB; cursor: not-allowed; }
+
+    @media (min-width: 720px) {
+      .items { grid-template-columns: 1fr 1fr; }
+      .item { grid-template-columns: 132px 1fr; }
+      .thumb { width: 132px; height: 132px; }
+      .hero-inner { grid-template-columns: 1fr 1.05fr; align-items: center; gap: 40px; padding-top: 40px; padding-bottom: 44px; }
+      .hero-photo { order: 2; }
+    }
+
+    /* ===== 하단 장바구니 바 ===== */
+    .cartbar {
+      position: fixed; left: 0; right: 0; bottom: 0; z-index: 25;
+      padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+      pointer-events: none;
+    }
+    .cartbar button {
+      pointer-events: auto;
+      display: flex; justify-content: space-between; align-items: center;
+      width: 100%; max-width: 560px; margin: 0 auto; padding: 15px 20px;
+      border: 0; border-radius: 14px; background: var(--red); color: #fff;
+      font-size: 16px; font-weight: 700; cursor: pointer;
+      box-shadow: 0 10px 28px rgba(142, 27, 36, .30);
+    }
+
+    /* ===== 시트 (장바구니, 주문서, 주문 완료) ===== */
+    .overlay {
+      position: fixed; inset: 0; z-index: 50;
+      display: flex; align-items: flex-end; justify-content: center;
+      background: rgba(15, 18, 20, .48);
+      opacity: 0; pointer-events: none; transition: opacity .2s ease;
+    }
+    .overlay.open { opacity: 1; pointer-events: auto; }
+    .sheet {
+      width: 100%; max-width: 560px; max-height: 92vh; overflow-y: auto;
+      background: var(--card); border-radius: 20px 20px 0 0;
+      padding: 0 20px calc(20px + env(safe-area-inset-bottom));
+      transform: translateY(24px); transition: transform .22s ease;
+    }
+    .sheet:focus { outline: none; }
+    .overlay.open .sheet { transform: none; }
+    .sheet-head {
+      position: sticky; top: 0; z-index: 1; background: var(--card);
+      display: flex; align-items: center; justify-content: space-between; padding: 16px 0 12px;
+    }
+    .sheet-head h2 { margin: 0; font-size: 20px; }
+    .close { border: 0; border-radius: 999px; padding: 8px 14px; background: var(--bg); font-weight: 600; cursor: pointer; }
+    .lead { margin: 0 0 14px; color: var(--steel); }
+    @media (min-width: 720px) {
+      .overlay { align-items: center; }
+      .sheet { border-radius: 20px; }
+    }
+
+    .lines { list-style: none; margin: 0; padding: 0; }
+    .line { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 10px 12px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+    .line p { margin: 0; }
+    .line-name { font-weight: 700; }
+    .line-opt { font-size: 13px; color: var(--muted); }
+    .line-sum { font-weight: 700; font-variant-numeric: tabular-nums; text-align: right; }
+    .qty { display: inline-flex; align-items: center; border: 1px solid var(--field); border-radius: 10px; overflow: hidden; justify-self: start; }
+    .qty button { width: 38px; height: 36px; border: 0; background: #fff; font-size: 18px; cursor: pointer; }
+    .qty span { min-width: 30px; text-align: center; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .remove { justify-self: end; border: 0; background: none; padding: 4px 0; color: var(--muted); font-size: 13px; text-decoration: underline; cursor: pointer; }
+
+    .totals { display: grid; gap: 6px; padding: 12px 0; font-variant-numeric: tabular-nums; }
+    .totals > div { display: flex; justify-content: space-between; gap: 12px; }
+    .totals .sub { margin-top: 4px; padding-top: 10px; border-top: 1px solid var(--line); }
+    .totals .grand { font-size: 18px; font-weight: 800; }
+    .note { margin: 0 0 14px; padding: 10px 12px; border-radius: 10px; background: var(--bg); color: var(--steel); font-size: 14px; }
+    .empty { text-align: center; padding: 36px 0 20px; color: var(--muted); }
+    .linkish { border: 0; background: none; padding: 0; color: var(--red); font-weight: 600; text-decoration: underline; cursor: pointer; }
+
+    /* ===== 주문서 폼 ===== */
+    fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+    .field { margin-bottom: 16px; }
+    .field > label, .field > legend { display: block; margin-bottom: 6px; font-size: 15px; font-weight: 700; }
+    .field input:not([type=radio]):not([type=checkbox]), .field select, .field textarea {
+      width: 100%; padding: 12px 14px;
+      border: 1px solid var(--field); border-radius: 10px; background: #fff; font-size: 16px;
+    }
+    .field textarea { min-height: 76px; resize: vertical; }
+    .field [aria-invalid="true"] { border-color: var(--red) !important; }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .optional { font-weight: 400; color: var(--muted); }
+    .err { margin: 4px 0 0; font-size: 13px; color: var(--red); }
+    .err:empty { display: none; }
+
+    .seg { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .seg label {
+      position: relative; display: flex; flex-direction: column;
+      padding: 12px 14px; border: 1.5px solid var(--field); border-radius: 12px;
+      font-weight: 700; cursor: pointer;
+    }
+    .seg input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+    .seg small { font-size: 13px; font-weight: 400; color: var(--muted); }
+    .seg label:has(input:checked) { border-color: var(--red); background: var(--red-tint); }
+    .seg label:has(input:focus-visible) { outline: 3px solid var(--ink); outline-offset: 2px; }
+    .seg label:has(input:disabled) { opacity: .5; cursor: not-allowed; }
+
+    .pay-list { display: grid; gap: 8px; }
+    .pay {
+      display: flex; gap: 12px; align-items: flex-start;
+      padding: 12px 14px; border: 1.5px solid var(--field); border-radius: 12px; cursor: pointer;
+    }
+    .pay input { margin-top: 4px; accent-color: var(--red); }
+    .pay span { display: flex; flex-direction: column; }
+    .pay small { font-size: 13px; color: var(--muted); }
+    .pay:has(input:checked) { border-color: var(--red); background: var(--red-tint); }
+    .pay.is-disabled { opacity: .55; cursor: not-allowed; }
+
+    .pickup-note { margin: 0 0 16px; padding: 10px 12px; border-radius: 10px; background: var(--bg); color: var(--steel); font-size: 14px; }
+    .agree { display: flex; gap: 10px; align-items: flex-start; margin: 14px 0 4px; font-size: 14px; color: var(--steel); cursor: pointer; }
+    .agree input { flex: none; width: 20px; height: 20px; margin: 1px 0 0; accent-color: var(--red); }
+    #orderForm .btn { margin-top: 14px; }
+
+    /* ===== 주문서 (영수증) ===== */
+    .receipt { position: relative; margin: 0 0 16px; padding: 18px 18px 12px; border: 1.5px dashed #BCC3C1; border-radius: 14px; font-variant-numeric: tabular-nums; }
+    .receipt .stamp { top: 12px; right: 12px; left: auto; width: 64px; height: 64px; transform: rotate(9deg); }
+    .receipt .stamp b { font-size: 15px; }
+    .r-no { margin: 0; padding-right: 72px; font-size: 17px; font-weight: 800; }
+    .r-when { margin: 2px 0 12px; padding-right: 72px; font-size: 14px; color: var(--steel); }
+    .r-lines { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+    .r-lines li { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 15px; }
+    .r-bank { margin: 8px 0 4px; padding: 10px 12px; border-radius: 10px; background: var(--bg); font-size: 14px; }
+    .hint { margin: 10px 0 0; text-align: center; font-size: 13px; color: var(--muted); }
+
+    /* ===== QR 결제 ===== */
+    .qrpay { margin: 0 0 16px; }
+    .qrpay-amount {
+      display: flex; justify-content: space-between; align-items: baseline; gap: 12px;
+      margin-bottom: 12px; padding: 12px 14px; border-radius: 12px; background: var(--red-tint);
+    }
+    .qrpay-amount b { font-size: 22px; color: var(--red); font-variant-numeric: tabular-nums; }
+    .qr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .qr-card { margin: 0; padding: 12px; border: 1px solid var(--line); border-radius: 14px; text-align: center; }
+    .qr-card h3 { min-height: 2.9em; margin: 0 0 6px; display: flex; align-items: center; justify-content: center; font-size: 14px; line-height: 1.4; }
+    .qr-card svg { display: block; width: 100%; max-width: 180px; height: auto; margin: 0 auto 8px; }
+    .qr-card svg path { shape-rendering: crispEdges; }
+    .qr-card small { display: block; font-size: 12px; color: var(--muted); }
+    .qr-card .linkish { margin-top: 8px; font-size: 13px; }
+    .qrpay-tip { margin: 12px 0 0; font-size: 13px; color: var(--steel); }
+
+    /* ===== 바닥글 ===== */
+    .site-foot { background: #262B2D; color: #BFC6C4; padding: 36px 0 120px; font-size: 13px; }
+    .origin-board { max-width: 380px; margin-bottom: 28px; padding: 14px 18px 8px; border-top: 6px solid var(--red); border-radius: 6px; background: #fff; color: var(--text); }
+    .origin-board h2 { margin: 0 0 6px; font-size: 16px; font-weight: 800; }
+    .origin-board table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .origin-board td { padding: 7px 0; border-top: 1px solid var(--line); }
+    .origin-board td:last-child { text-align: right; font-weight: 600; }
+    .biz { display: grid; grid-template-columns: max-content 1fr; gap: 4px 14px; margin: 0 0 16px; }
+    .biz dt { color: #8D9694; }
+    .biz dd { margin: 0; }
+
+    /* ===== 알림 ===== */
+    .toast {
+      position: fixed; left: 50%; bottom: 96px; z-index: 60;
+      padding: 10px 16px; border-radius: 10px; background: var(--text); color: #fff; font-size: 14px;
+      transform: translate(-50%, 10px); opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s;
+    }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .overlay, .sheet, .toast { transition: none; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 미리보기 표시. 정식 오픈할 때 이 줄 지우기 -->
+  <div class="preview-bar">미리보기 화면이에요. 아직 실제 주문은 받지 않아요.</div>
+  <header class="topbar">
+    <div class="wrap">
+      <a class="brand" href="#top">대가식당</a>
+      <div class="top-actions">
+        <a class="icon-btn" id="callTop" href="#" aria-label="가게에 전화하기">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        </a>
+        <button class="icon-btn" id="cartTop" type="button" data-open="cartSheet" aria-label="장바구니 열기">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.4 11.2a2 2 0 0 0 2 1.6h8.2a2 2 0 0 0 2-1.5L21 7H6"/></svg>
+          <span class="badge" id="cartBadge" hidden>0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero" id="top">
+    <div class="wrap hero-inner">
+      <img class="hero-photo" id="heroPhoto" src="img/store.jpg" alt="등심 전문 대가식당 간판이 걸린 매장 앞 모습">
+      <div class="hero-text">
+        <p class="hero-trust" id="heroTrust"></p>
+        <h1 id="heroName">대가식당</h1>
+        <p id="heroIntro"></p>
+        <ul class="hero-meta">
+          <li id="heroPickup"></li>
+          <li id="heroHours"></li>
+          <li id="heroAddr"></li>
+        </ul>
+        <div class="hero-actions">
+          <a class="btn btn-light" href="#menu">주문하기</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <nav class="tabs" aria-label="메뉴 분류">
+    <div class="wrap" id="tabs"></div>
+  </nav>
+
+  <main class="wrap menu" id="menu"></main>
+
+  <footer class="site-foot">
+    <div class="wrap">
+      <div class="origin-board">
+        <h2>원산지 표시</h2>
+        <table id="originTable"></table>
+      </div>
+      <dl class="biz" id="bizInfo"></dl>
+    </div>
+  </footer>
+
+  <div class="cartbar" id="cartbar" hidden>
+    <button type="button" data-open="cartSheet"><span id="cartbarCount"></span><span id="cartbarTotal"></span></button>
+  </div>
+
+  <!-- 장바구니 -->
+  <div class="overlay" id="cartSheet" aria-hidden="true" inert>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="cartTitle" tabindex="-1">
+      <div class="sheet-head">
+        <h2 id="cartTitle">장바구니</h2>
+        <button type="button" class="close" data-close>닫기</button>
+      </div>
+      <div id="cartBody"></div>
+    </div>
+  </div>
+
+  <!-- 주문서 -->
+  <div class="overlay" id="checkoutSheet" aria-hidden="true" inert>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle" tabindex="-1">
+      <div class="sheet-head">
+        <h2 id="checkoutTitle">주문하기</h2>
+        <button type="button" class="close" data-close>닫기</button>
+      </div>
+      <form id="orderForm" novalidate>
+        <p class="pickup-note" id="pickupNote"></p>
+        <div class="field-row">
+          <div class="field">
+            <label for="fDate">픽업 날짜</label>
+            <select id="fDate"></select>
+          </div>
+          <div class="field">
+            <label for="fTime">픽업 시간</label>
+            <select id="fTime"></select>
+            <p class="err" data-err="time"></p>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="fName">이름</label>
+          <input id="fName" autocomplete="name">
+          <p class="err" data-err="name"></p>
+        </div>
+        <div class="field">
+          <label for="fPhone">연락처</label>
+          <input id="fPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="010-1234-5678">
+          <p class="err" data-err="phone"></p>
+        </div>
+        <div class="field">
+          <label for="fMemo">요청사항 <span class="optional">(선택)</span></label>
+          <textarea id="fMemo" placeholder="예) 등심은 2cm 두께로 썰어주세요"></textarea>
+        </div>
+
+        <fieldset class="field">
+          <legend>결제 방법</legend>
+          <div class="pay-list" id="payList"></div>
+        </fieldset>
+
+        <div id="checkoutSummary"></div>
+        <button type="button" class="linkish" data-open="cartSheet">장바구니 수정</button>
+
+        <label class="agree"><input type="checkbox" id="fAgree"> 주문 처리를 위해 이름과 연락처를 가게에 전달하는 데 동의해요</label>
+        <p class="err" data-err="agree"></p>
+        <p class="err" data-err="form"></p>
+        <button class="btn btn-primary block" type="submit">주문하기</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 주문서 완성 -->
+  <div class="overlay" id="doneSheet" aria-hidden="true" inert>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="doneTitle" tabindex="-1">
+      <div class="sheet-head">
+        <h2 id="doneTitle">결제하고 주문을 보내주세요</h2>
+        <button type="button" class="close" data-close>닫기</button>
+      </div>
+      <p class="lead" id="doneLead"></p>
+      <div class="receipt" id="receipt"></div>
+      <div class="qrpay" id="qrPay" hidden></div>
+      <a class="btn btn-primary block" id="smsBtn" href="#">문자로 주문 보내기</a>
+      <button class="btn btn-outline block" id="copyBtn" type="button">주문 내용 복사</button>
+      <p class="hint">PC에서는 복사해서 카카오톡이나 문자로 보내주세요.</p>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <!-- 매장 QR. 매장에 붙어 있는 QR 사진에서 읽은 내용(스크립트의 QR_PAY payload)으로 다시 만든 것.
+       QR이 바뀌면 새 QR을 같은 방식으로 다시 만들어 이 부분을 교체해야 함 -->
+  <template id="qr-zeropay"><svg viewBox="0 0 35 35" class="segno"><path fill="#fff" d="M0 0h35v35h-35z"/><path class="qrline" stroke="#1e2224" d="M3 3.5h7m1 0h2m2 0h5m2 0h1m2 0h7m-29 1h1m5 0h1m1 0h1m2 0h1m1 0h2m1 0h2m2 0h1m1 0h1m5 0h1m-29 1h1m1 0h3m1 0h1m2 0h2m1 0h2m8 0h1m1 0h3m1 0h1m-29 1h1m1 0h3m1 0h1m1 0h1m4 0h1m3 0h2m1 0h1m1 0h1m1 0h3m1 0h1m-29 1h1m1 0h3m1 0h1m2 0h4m2 0h1m1 0h4m1 0h1m1 0h3m1 0h1m-29 1h1m5 0h1m2 0h2m3 0h1m4 0h1m2 0h1m5 0h1m-29 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-21 1h1m1 0h1m1 0h1m1 0h1m1 0h2m2 0h1m-21 1h1m1 0h2m1 0h3m1 0h9m1 0h2m1 0h1m2 0h1m1 0h2m-29 1h2m1 0h1m3 0h1m2 0h1m1 0h1m1 0h1m4 0h1m2 0h1m1 0h1m-24 1h6m1 0h2m2 0h1m1 0h1m2 0h2m1 0h1m5 0h2m-26 1h2m1 0h1m1 0h1m1 0h1m1 0h3m1 0h2m1 0h1m4 0h1m1 0h1m-22 1h1m1 0h4m3 0h6m1 0h2m1 0h1m2 0h3m-27 1h4m1 0h4m2 0h1m1 0h1m1 0h7m1 0h1m1 0h1m-23 1h2m1 0h2m2 0h1m6 0h2m1 0h2m3 0h2m-29 1h6m1 0h1m1 0h2m1 0h1m2 0h1m2 0h1m1 0h2m1 0h2m-22 1h1m2 0h1m1 0h1m3 0h1m1 0h3m2 0h2m3 0h2m1 0h2m-25 1h2m4 0h2m1 0h1m1 0h2m1 0h4m3 0h1m-26 1h1m1 0h1m2 0h2m3 0h2m3 0h1m2 0h1m1 0h3m1 0h1m1 0h2m-25 1h1m1 0h1m2 0h1m2 0h1m2 0h2m1 0h1m3 0h1m1 0h1m2 0h2m-27 1h1m1 0h2m1 0h1m1 0h1m1 0h1m1 0h2m3 0h1m2 0h5m1 0h1m1 0h1m-21 1h1m3 0h2m6 0h1m3 0h1m3 0h1m-29 1h7m1 0h1m2 0h3m3 0h1m1 0h2m1 0h1m1 0h1m1 0h1m-27 1h1m5 0h1m1 0h2m1 0h2m6 0h2m3 0h2m2 0h1m-29 1h1m1 0h3m1 0h1m2 0h1m1 0h2m1 0h5m1 0h9m-29 1h1m1 0h3m1 0h1m1 0h1m1 0h1m2 0h3m1 0h3m4 0h1m1 0h1m1 0h1m-29 1h1m1 0h3m1 0h1m1 0h6m4 0h2m1 0h1m3 0h2m1 0h1m-29 1h1m5 0h1m3 0h1m1 0h1m3 0h1m1 0h3m3 0h1m2 0h1m-28 1h7m1 0h1m1 0h1m1 0h1m3 0h1m3 0h2m1 0h1m1 0h1m1 0h1"/></svg></template>
+  <template id="qr-seoulpay"><svg viewBox="0 0 35 35" class="segno"><path fill="#fff" d="M0 0h35v35h-35z"/><path class="qrline" stroke="#1e2224" d="M3 3.5h7m1 0h1m2 0h1m1 0h1m2 0h2m2 0h1m1 0h7m-29 1h1m5 0h1m1 0h1m3 0h3m1 0h2m1 0h2m1 0h1m5 0h1m-29 1h1m1 0h3m1 0h1m1 0h1m2 0h5m2 0h1m3 0h1m1 0h3m1 0h1m-29 1h1m1 0h3m1 0h1m2 0h3m1 0h6m3 0h1m1 0h3m1 0h1m-29 1h1m1 0h3m1 0h1m1 0h3m1 0h2m3 0h1m1 0h2m1 0h1m1 0h3m1 0h1m-29 1h1m5 0h1m5 0h1m4 0h2m3 0h1m5 0h1m-29 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-20 1h1m2 0h2m2 0h1m1 0h3m-21 1h1m2 0h6m1 0h1m2 0h2m1 0h6m2 0h1m1 0h3m-29 1h3m2 0h1m2 0h5m1 0h3m2 0h3m2 0h1m1 0h3m-28 1h2m1 0h3m2 0h2m4 0h1m4 0h2m1 0h1m2 0h1m-27 1h1m1 0h2m3 0h4m3 0h1m1 0h4m2 0h1m1 0h1m2 0h1m-28 1h2m2 0h1m1 0h3m1 0h3m2 0h1m2 0h2m1 0h2m2 0h1m1 0h2m-28 1h1m2 0h1m3 0h2m1 0h1m3 0h1m4 0h3m1 0h1m2 0h1m-28 1h3m2 0h2m4 0h3m1 0h2m1 0h3m1 0h1m5 0h1m-29 1h1m1 0h4m2 0h5m1 0h2m2 0h1m3 0h1m1 0h5m-27 1h1m3 0h1m1 0h1m1 0h2m2 0h3m1 0h4m4 0h1m1 0h1m-29 1h1m3 0h1m3 0h5m2 0h3m2 0h2m1 0h2m-25 1h3m1 0h1m1 0h1m1 0h1m3 0h4m1 0h3m1 0h4m1 0h3m-29 1h2m3 0h1m1 0h1m2 0h7m1 0h2m4 0h1m1 0h2m-28 1h3m3 0h1m2 0h3m1 0h1m1 0h1m1 0h2m1 0h6m1 0h2m-21 1h2m3 0h4m3 0h1m3 0h4m-28 1h7m1 0h1m2 0h1m1 0h1m1 0h1m1 0h4m1 0h1m1 0h1m2 0h1m-28 1h1m5 0h1m1 0h2m3 0h1m3 0h2m1 0h1m3 0h1m3 0h1m-29 1h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h2m1 0h1m2 0h7m2 0h1m-28 1h1m1 0h3m1 0h1m1 0h4m1 0h3m3 0h2m2 0h1m1 0h2m1 0h1m-29 1h1m1 0h3m1 0h1m4 0h1m2 0h3m2 0h2m3 0h5m-29 1h1m5 0h1m3 0h2m1 0h3m3 0h1m4 0h1m1 0h1m1 0h1m-29 1h7m1 0h3m4 0h2m1 0h1m1 0h1m3 0h2"/></svg></template>
+
+  <script>
+    'use strict';
+
+    /* =========================================================
+       1. 가게 정보  (TODO 표시된 곳은 실제 정보로 꼭 바꿔주세요)
+       ========================================================= */
+    // 주소, 전화, 영업시간은 다이닝코드에 올라온 정보 기준 (2026년). 친구분께 한 번 확인받기
+    const STORE = {
+      name: '대가식당',
+      intro: '가게에서 먹던 그 생등심, 미리 주문하고 포장해 가세요.',
+      address: '서울 광진구 광나루로 596',
+      phone: '02-455-7866',                       // 가게 전화 (위쪽 전화 버튼)
+      orderPhone: '010-0000-0000',                // TODO 주문 문자를 받을 휴대폰 번호. 02 유선번호는 문자를 못 받음
+      // 간판 위 신뢰 문구. 확인된 사실만 넣기 (사실과 다르면 허위광고가 될 수 있음)
+      openedYear: 2012,                           // 대가식당 개업 연도. 2012 → "15년째 한자리" (매년 자동 계산). 정확한 연도 알면 바꾸기
+      topGrade: '',                               // 모든 한우가 같은 등급일 때만 넣기 (지금은 1++ 만 쓰는 게 아니라서 비워 둠)
+      // 지금은 매장 픽업만 받음
+      open: '11:30',                              // 픽업 받는 시작 시간
+      close: '22:00',                             // 영업 끝 (마지막 픽업은 30분 전까지)
+      readyMinutes: 30,                           // 주문 받고 포장까지 걸리는 시간
+      bankAccount: '○○은행 000-000000-00-000 (예금주 ○○○)', // TODO
+      bookDays: 7,                                // 오늘부터 며칠 뒤까지 픽업 날짜를 고를 수 있는지
+      // 온라인으로 팔면 사이트에 꼭 표시해야 하는 사업자 정보 (전자상거래법)
+      biz: {
+        company: '대가식당',
+        owner: '○○○',                            // TODO 대표자
+        regNo: '000-00-00000',                    // TODO 사업자등록번호
+        mailOrderNo: '제0000-서울광진-0000호',     // TODO 통신판매업 신고번호
+      },
+    };
+
+    // 카드, 삼성페이 같은 온라인 결제는 PG사 연결 후 true 로 (아래 requestOnlinePayment 참고)
+    const ONLINE_PAYMENT_ENABLED = false;
+
+    /* =========================================================
+       2. 메뉴  (여기 값만 바꾸면 화면, 장바구니, 원산지 표시판이 같이 바뀜)
+       stamp    사진 위 도장 [작은 글씨, 큰 글씨]. 등급이 정해지면 ['등급', '1++'] 처럼. 없으면 도장 안 나옴
+       origin   원산지. 채우면 상품 아래와 원산지 표시판에 같이 나옴
+       traceNo  쇠고기 이력번호. 넣으면 상품 아래에 표시
+       unit     한 개가 얼마만큼인지 (예: '1인분 200g'). 손님은 이 단위로 수량을 올림
+       price    한 개 가격. null 이면 "가격 준비 중"으로 보이고 담을 수 없음
+       soldOut  true 면 품절 처리
+       emoji    사진 파일이 없을 때 대신 보여줄 그림
+       ========================================================= */
+    const MENU = [
+      {
+        id: 'sirloin', category: '한우', name: '한우 생등심', stamp: ['국내산', '한우'], origin: '국내산 한우', traceNo: '',
+        desc: '대가식당 대표 메뉴예요.',
+        unit: '1인분 200g', price: 50000,
+        img: 'img/sirloin.jpg', emoji: '🥩',
+      },
+      {
+        id: 'yukhoe', category: '한우', name: '한우 육회', stamp: ['국내산', '한우'], origin: '국내산 한우', traceNo: '',
+        desc: '',
+        unit: '1접시 200g', price: 30000,           // TODO 단위 표현 확인 (다이닝코드 기준 200g 30,000원)
+        img: 'img/yukhoe.jpeg', emoji: '🥩',
+      },
+      {
+        id: 'jangjorim', category: '반찬', name: '장조림',
+        origin: '',                                // TODO 고기 원산지
+        desc: '',
+        unit: '1팩',                               // TODO 한 팩 용량 (예: '1팩 300g')
+        price: null,                               // TODO 장조림 가격 정해지면 숫자로 (예: 15000)
+        img: 'img/jangjorim.jpg', emoji: '🍲',
+      },
+      {
+        id: 'friedrice', category: '식사', name: '깍두기볶음밥',
+        origin: '',                                // TODO 쌀, 김치 원산지
+        desc: '깍두기를 넣고 볶은 대가식당 마무리 메뉴예요.',
+        unit: '1인분', price: 4000,
+        img: 'img/friedrice.jpg', emoji: '🍚',
+      },
+      {
+        id: 'doenjangjuk', category: '식사', name: '된장죽',
+        origin: '',                                // TODO 쌀 원산지
+        desc: '고기 먹고 마무리로 좋은 된장죽이에요.',
+        unit: '1인분', price: 5000,
+        img: 'img/doenjangjuk.jpeg', emoji: '🥣',
+      },
+    ];
+
+    /* =========================================================
+       3. 결제 방법
+       ========================================================= */
+    // 결제는 전부 주문할 때 미리 (노쇼 방지). 첫 번째로 쓸 수 있는 방법이 기본 선택
+    const PAYMENTS = [
+      {
+        id: 'online', label: '카드, 간편결제',
+        desc: ONLINE_PAYMENT_ENABLED ? '삼성페이, 카카오페이, 네이버페이' : '삼성페이, 카카오페이 등은 준비 중이에요',
+        disabled: !ONLINE_PAYMENT_ENABLED,
+      },
+      { id: 'qr', label: 'QR 결제', desc: '카카오페이, 제로페이, 서울페이+, 해외 결제앱' },
+      { id: 'transfer', label: '계좌이체', desc: STORE.bankAccount },
+    ];
+
+    /* =========================================================
+       매장 QR 결제
+       손님이 결제 앱으로 QR을 찍고 금액을 직접 넣는 방식.
+       결제가 들어오면 가맹점 앱에 알림이 오니, 가게는 금액과 시간을 확인하고 준비하면 돼요.
+       payload 는 매장 QR 사진에서 읽은 내용 (화면의 QR은 같은 내용으로 다시 만든 것)
+       ========================================================= */
+    const QR_PAY = [
+      {
+        id: 'zeropay', title: '카카오페이, 제로페이',
+        payload: '1-ZP-202005520953-M202005000474292--Z6Pz',
+        note: '결제 앱에 대가식당으로 떠요',
+      },
+      {
+        id: 'seoulpay', title: '서울페이+, 해외 결제앱',
+        payload: '1-SP-AF2402604098-M202606000564760--19Ex',
+        note: '알리페이, 위챗페이 등. 결제 앱에 (주)대도캐터링으로 떠요',
+      },
+    ];
+
+    /* =========================================================
+       온라인 결제 연결 자리
+       삼성페이만 따로 붙이는 게 아니라 PG사(토스페이먼츠, 포트원 등) 하나를 연결하면
+       카드, 삼성페이, 카카오페이, 네이버페이를 결제창 하나로 같이 쓸 수 있어요.
+       1) 사업자등록, 통신판매업 신고 후 PG사 가입과 심사
+       2) PG사 SDK <script> 를 넣고 이 함수에서 결제창 호출
+       3) 결제 금액 검증과 승인은 반드시 서버에서 (브라우저에 있는 금액은 조작될 수 있음)
+       ========================================================= */
+    async function requestOnlinePayment(order) {
+      throw new Error('온라인 결제가 아직 연결되지 않았어요. 다른 결제 방법을 골라주세요.');
+    }
+
+    /* =========================================================
+       아래부터는 동작 코드
+       ========================================================= */
+    const $ = (sel, root = document) => root.querySelector(sel);
+    const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
+    const won = n => n.toLocaleString('ko-KR') + '원';
+    const digits = s => String(s).replace(/\D/g, '');
+    const pad = n => String(n).padStart(2, '0');
+    const findItem = id => MENU.find(m => m.id === id);
+    const categories = () => [...new Set(MENU.map(m => m.category))];
+    function esc(s) {
+      return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+
+    /* ----- 장바구니 데이터 (새로고침해도 유지) ----- */
+    const CART_KEY = 'daega-cart-v2';
+    const canOrder = m => m && !m.soldOut && m.price != null;   // 담을 수 있는 메뉴인지 (loadCart 보다 먼저 있어야 함)
+    let cart = loadCart();          // [{ id, qty }]  가격은 항상 MENU 에서 다시 읽음
+    let activeCat = '전체';
+    let currentOrder = null;
+    let orderSent = false;
+
+    function loadCart() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(CART_KEY) || '[]');
+        return saved.filter(l => canOrder(findItem(l.id)) && l.qty > 0);
+      } catch (e) { return []; }
+    }
+    function saveCart() {
+      try { localStorage.setItem(CART_KEY, JSON.stringify(cart)); } catch (e) { /* 저장 못 해도 동작은 계속 */ }
+    }
+    function cartLines() {
+      return cart.map(l => {
+        const m = findItem(l.id);
+        return { ...l, name: m.name, unit: m.unit, price: m.price, sum: m.price * l.qty };
+      });
+    }
+    const subtotal = () => cartLines().reduce((s, l) => s + l.sum, 0);
+    const itemCount = () => cart.reduce((s, l) => s + l.qty, 0);
+    const qtyOf = id => (cart.find(l => l.id === id) || {}).qty || 0;
+
+    // 수량 바꾸기 (+1, -1). 0이 되면 장바구니에서 빠짐
+    function changeQty(id, delta) {
+      const m = findItem(id);
+      if (!canOrder(m)) return;
+      let line = cart.find(l => l.id === id);
+      if (!line) { line = { id, qty: 0 }; cart.push(line); }
+      const before = line.qty;
+      line.qty = Math.max(0, Math.min(line.qty + delta, 99));
+      if (line.qty === 0) cart = cart.filter(l => l !== line);
+      saveCart();
+      renderCartUI();
+      if (before === 0 && line.qty > 0) toast(`${m.name} 담았어요`);
+    }
+    function removeLine(id) {
+      cart = cart.filter(l => l.id !== id);
+      saveCart();
+      renderCartUI();
+    }
+
+    /* ----- 간판 위 신뢰 문구 ----- */
+    // openedYear 만 있으면 "15년째 한자리, 국내산 한우 생등심 전문"
+    // topGrade 까지 채우면 뒷부분이 "1++ 한우만 씁니다" 처럼 바뀜
+    function trustLine() {
+      const parts = [];
+      if (STORE.openedYear) parts.push(`${new Date().getFullYear() - STORE.openedYear + 1}년째 한자리`);
+      parts.push(STORE.topGrade ? `${STORE.topGrade} 한우만 씁니다` : '국내산 한우 생등심 전문');
+      return parts.join(', ');
+    }
+
+    /* ----- 가게 정보 그리기 ----- */
+    function renderStore() {
+      document.title = `${STORE.name} | 포장 주문`;
+      $('.brand').textContent = STORE.name;
+      $('#heroName').textContent = STORE.name;
+      $('#heroTrust').textContent = trustLine();
+      $('#heroIntro').textContent = STORE.intro;
+      $('#heroPickup').textContent = `매장 픽업, 주문 ${STORE.readyMinutes}분 뒤부터`;
+      $('#heroHours').textContent = `픽업 시간 ${STORE.open} ~ ${STORE.close}`;
+      $('#heroAddr').textContent = STORE.address;
+      $('#callTop').href = `tel:${digits(STORE.phone)}`;
+
+      // 가게 사진이 없으면 사진 자리 없이 글만
+      const photo = $('#heroPhoto');
+      if (photo.complete && photo.naturalWidth === 0) photo.remove();
+      else photo.addEventListener('error', () => photo.remove(), { once: true });
+
+      $('#originTable').innerHTML = `<tbody>${MENU.filter(m => m.origin)
+        .map(m => `<tr><td>${esc(m.name)}</td><td>${esc(m.origin)}</td></tr>`).join('')}</tbody>`;
+
+      const b = STORE.biz;
+      $('#bizInfo').innerHTML = [
+        ['상호', b.company], ['대표자', b.owner], ['주소', STORE.address], ['전화', STORE.phone],
+        ['사업자등록번호', b.regNo], ['통신판매업 신고', b.mailOrderNo],
+      ].map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join('');
+
+    }
+
+    /* ----- 차림표 그리기 ----- */
+    function renderTabs() {
+      $('#tabs').innerHTML = ['전체', ...categories()]
+        .map(c => `<button type="button" class="tab" data-cat="${esc(c)}" aria-pressed="${c === activeCat}">${esc(c)}</button>`)
+        .join('');
+    }
+    // 카드 오른쪽 아래 버튼. 안 담았으면 "담기", 담았으면 − 수량 + 로 바뀜
+    function controlHTML(m) {
+      if (m.soldOut) return '<button type="button" class="add-btn" disabled>품절</button>';
+      if (m.price == null) return '<button type="button" class="add-btn" disabled>준비 중</button>';
+      const q = qtyOf(m.id);
+      if (!q) return `<button type="button" class="add-btn" data-step="1" data-id="${esc(m.id)}">담기</button>`;
+      return `
+        <div class="qty qty-card" role="group" aria-label="${esc(m.name)} 수량">
+          <button type="button" data-step="-1" data-id="${esc(m.id)}" aria-label="하나 빼기">−</button>
+          <span>${q}</span>
+          <button type="button" data-step="1" data-id="${esc(m.id)}" aria-label="하나 더하기">+</button>
+        </div>`;
+    }
+    function refreshControls() {
+      $$('#menu .item').forEach(art => {
+        $('.item-control', art).innerHTML = controlHTML(findItem(art.dataset.id));
+      });
+    }
+    function itemHTML(m) {
+      const originLine = [m.origin, m.traceNo && `이력번호 ${m.traceNo}`].filter(Boolean).join(', ');
+      return `
+        <article class="item${m.soldOut ? ' soldout' : ''}" data-id="${esc(m.id)}">
+          <div class="thumb" data-emoji="${m.emoji || '🍽️'}">
+            <img src="${esc(m.img)}" alt="${esc(m.name)}" loading="lazy">
+            ${m.stamp ? `<span class="stamp" aria-label="${esc(m.stamp.join(' '))}"><small>${esc(m.stamp[0])}</small><b>${esc(m.stamp[1])}</b></span>` : ''}
+            ${m.soldOut ? '<span class="soldout-tag">품절</span>' : ''}
+          </div>
+          <div class="item-body">
+            <h3 class="item-name">${esc(m.name)}</h3>
+            ${originLine ? `<p class="item-origin">${esc(originLine)}</p>` : ''}
+            ${m.desc ? `<p class="item-desc">${esc(m.desc)}</p>` : ''}
+            <p class="unit">${esc(m.unit)}</p>
+            <div class="item-foot">
+              <div class="price${m.price == null ? ' pending' : ''}">${m.price == null ? '가격 준비 중' : won(m.price)}</div>
+              <div class="item-control">${controlHTML(m)}</div>
+            </div>
+          </div>
+        </article>`;
+    }
+    function renderMenu() {
+      const cats = activeCat === '전체' ? categories() : [activeCat];
+      $('#menu').innerHTML = cats.map(c => `
+        <section>
+          <h2 class="cat-title">${esc(c)}</h2>
+          <div class="items">${MENU.filter(m => m.category === c).map(itemHTML).join('')}</div>
+        </section>`).join('');
+      bindImageFallbacks($('#menu'));
+    }
+    // 사진 파일이 없으면 깨진 이미지 대신 이모지 표시
+    function bindImageFallbacks(root) {
+      $$('.thumb img', root).forEach(img => {
+        const fail = () => { img.parentElement.classList.add('noimg'); img.remove(); };
+        if (img.complete && img.naturalWidth === 0) fail();
+        else img.addEventListener('error', fail, { once: true });
+      });
+    }
+    /* ----- 장바구니 그리기 ----- */
+    function renderCartUI() {
+      const count = itemCount();
+      const badge = $('#cartBadge');
+      badge.hidden = count === 0;
+      badge.textContent = count;
+      $('#cartbar').hidden = count === 0;
+      $('#cartbarCount').textContent = `장바구니 보기 ${count}개`;
+      $('#cartbarTotal').textContent = won(subtotal());
+      renderCartBody();
+      refreshControls();
+    }
+    function renderCartBody() {
+      const lines = cartLines();
+      const body = $('#cartBody');
+      if (!lines.length) {
+        body.innerHTML = `<div class="empty"><p>장바구니가 비어 있어요.</p><button type="button" class="btn btn-outline" data-close>메뉴 보러 가기</button></div>`;
+        return;
+      }
+      body.innerHTML = `
+        <ul class="lines">${lines.map(l => `
+          <li class="line">
+            <div><p class="line-name">${esc(l.name)}</p><p class="line-opt">${esc(l.unit)}, ${won(l.price)}</p></div>
+            <p class="line-sum">${won(l.sum)}</p>
+            <div class="qty" role="group" aria-label="${esc(l.name)} 수량">
+              <button type="button" data-step="-1" data-id="${l.id}" aria-label="하나 빼기">−</button>
+              <span>${l.qty}</span>
+              <button type="button" data-step="1" data-id="${l.id}" aria-label="하나 더하기">+</button>
+            </div>
+            <button type="button" class="remove" data-remove="${l.id}">삭제</button>
+          </li>`).join('')}
+        </ul>
+        <div class="totals"><div class="grand"><span>합계</span><span>${won(subtotal())}</span></div></div>
+        <p class="note">매장(${esc(STORE.address)})에서 포장해 가는 주문이에요.</p>
+        <button type="button" class="btn btn-primary block" id="toCheckout">주문하기</button>`;
+    }
+
+    /* ----- 시트 열고 닫기 ----- */
+    let returnFocus = null;
+    function setOpen(o, open) {
+      o.classList.toggle('open', open);
+      o.setAttribute('aria-hidden', String(!open));
+      o.toggleAttribute('inert', !open);
+    }
+    function openSheet(id) {
+      if (!$('.overlay.open')) returnFocus = document.activeElement;
+      $$('.overlay.open').forEach(o => setOpen(o, false));
+      const target = document.getElementById(id);
+      if (id === 'cartSheet') renderCartBody();
+      setOpen(target, true);
+      document.body.style.overflow = 'hidden';
+      $('.sheet', target).focus();
+    }
+    function closeSheet(o) {
+      if (!o || !o.classList.contains('open')) return;
+      setOpen(o, false);
+      document.body.style.overflow = '';
+      if (o.id === 'doneSheet' && orderSent) finishOrder();
+      if (returnFocus && document.contains(returnFocus)) returnFocus.focus();
+      returnFocus = null;
+    }
+
+    /* ----- 주문서 ----- */
+    const DAY = '일월화수목금토';
+    function dayLabel(offset) {
+      const d = new Date();
+      d.setDate(d.getDate() + offset);
+      const date = `${d.getMonth() + 1}/${d.getDate()} (${DAY[d.getDay()]})`;
+      return offset === 0 ? `오늘 ${date}` : offset === 1 ? `내일 ${date}` : date;
+    }
+    function timeSlots(offset) {
+      const now = new Date();
+      const at = hm => {
+        const [h, m] = hm.split(':').map(Number);
+        return new Date(now.getFullYear(), now.getMonth(), now.getDate() + offset, h, m);
+      };
+      const last = at(STORE.close);
+      last.setMinutes(last.getMinutes() - 30);
+      const earliest = new Date(now.getTime() + STORE.readyMinutes * 60000);
+      const out = [];
+      for (let t = at(STORE.open); t <= last; t.setMinutes(t.getMinutes() + 30)) {
+        if (t >= earliest) out.push(`${pad(t.getHours())}:${pad(t.getMinutes())}`);
+      }
+      return out;
+    }
+    function renderDates() {
+      const todayOpen = timeSlots(0).length > 0;
+      const days = Array.from({ length: STORE.bookDays }, (_, i) => i);
+      $('#fDate').innerHTML = days.map(o => {
+        const closed = o === 0 && !todayOpen;
+        return `<option value="${o}" ${closed ? 'disabled' : ''}>${dayLabel(o)}${closed ? ' 마감' : ''}</option>`;
+      }).join('');
+      $('#fDate').value = todayOpen ? '0' : '1';
+    }
+    function renderTimes() {
+      const slots = timeSlots(Number($('#fDate').value));
+      $('#fTime').innerHTML = slots.map(t => `<option value="${t}">${t}</option>`).join('');
+    }
+    function renderPayments() {
+      const first = PAYMENTS.findIndex(p => !p.disabled);
+      $('#payList').innerHTML = PAYMENTS.map((p, i) => `
+        <label class="pay${p.disabled ? ' is-disabled' : ''}">
+          <input type="radio" name="pay" value="${p.id}" ${i === first ? 'checked' : ''} ${p.disabled ? 'disabled' : ''}>
+          <span><b>${esc(p.label)}</b><small>${esc(p.desc)}</small></span>
+        </label>`).join('');
+    }
+    function renderSummary() {
+      $('#checkoutSummary').innerHTML = `
+        <div class="totals">
+          ${cartLines().map(l => `<div><span>${esc(l.name)} × ${l.qty}</span><span>${won(l.sum)}</span></div>`).join('')}
+          <div class="sub grand"><span>결제 금액</span><span>${won(subtotal())}</span></div>
+        </div>`;
+    }
+    function openCheckout() {
+      if (!cart.length) return;
+      clearErrors();
+      renderDates();
+      renderTimes();
+      renderSummary();
+      $('#pickupNote').textContent = `매장에서 직접 가져가는 주문이에요. 픽업 장소 ${STORE.address}`;
+      openSheet('checkoutSheet');
+    }
+
+    const FIELD_IDS = { name: 'fName', phone: 'fPhone', time: 'fTime', agree: 'fAgree' };
+    function showErr(key, msg) {
+      $(`[data-err="${key}"]`).textContent = msg;
+      if (FIELD_IDS[key]) document.getElementById(FIELD_IDS[key]).setAttribute('aria-invalid', 'true');
+    }
+    function clearErrors() {
+      $$('#orderForm [data-err]').forEach(e => { e.textContent = ''; });
+      $$('#orderForm [aria-invalid]').forEach(e => e.removeAttribute('aria-invalid'));
+    }
+
+    function buildOrder(data) {
+      const now = new Date();
+      return {
+        no: `DG-${pad(now.getMonth() + 1)}${pad(now.getDate())}-${Math.floor(Math.random() * 9000) + 1000}`,
+        ...data,
+        dateLabel: dayLabel(data.dateOffset),
+        lines: cartLines(), total: subtotal(),
+        payLabel: PAYMENTS.find(p => p.id === data.pay).label,
+      };
+    }
+    function orderText(o) {
+      return [
+        `[${STORE.name} 포장 주문] ${o.no}`,
+        `픽업 ${o.dateLabel} ${o.time}`,
+        '',
+        ...o.lines.map(l => `${l.name} ${l.unit} × ${l.qty}  ${won(l.sum)}`),
+        '',
+        `합계 ${won(o.total)}`,
+        `결제 ${o.payLabel}`,
+        '',
+        `주문자 ${o.name} ${o.phone}`,
+        ...(o.memo ? [`요청 ${o.memo}`] : []),
+      ].join('\n');
+    }
+    // 결제 방법별로 주문 완료 화면 안내 문장
+    const DONE_LEAD = {
+      qr: '아래 QR로 먼저 결제하고, 주문을 문자로 보내주세요. 가게에서 결제를 확인하고 포장해둘게요.',
+      transfer: '아래 계좌로 먼저 입금하고, 주문을 문자로 보내주세요. 가게에서 입금을 확인하고 포장해둘게요.',
+      online: '결제가 끝났어요. 아래 버튼으로 주문을 가게에 보내주세요.',
+    };
+    function showDone(o) {
+      currentOrder = o;
+      orderSent = false;
+      $('#receipt').innerHTML = `
+        <span class="stamp" aria-hidden="true"><small>${esc(STORE.name)}</small><b>포장</b></span>
+        <p class="r-no">주문번호 ${esc(o.no)}</p>
+        <p class="r-when">픽업, ${esc(o.dateLabel)} ${esc(o.time)}</p>
+        <ul class="r-lines">${o.lines.map(l => `<li><span>${esc(l.name)} × ${l.qty}</span><span>${won(l.sum)}</span></li>`).join('')}</ul>
+        <div class="totals">
+          <div class="grand"><span>합계</span><span>${won(o.total)}</span></div>
+          <div><span>결제</span><span>${esc(o.payLabel)}</span></div>
+        </div>
+        <p class="r-bank">픽업 장소 ${esc(STORE.address)}</p>
+        ${o.pay === 'transfer' ? `<p class="r-bank">입금 계좌 ${esc(STORE.bankAccount)}<br>입금할 금액 ${won(o.total)}</p>` : ''}`;
+      const isQr = o.pay === 'qr';
+      $('#doneLead').textContent = DONE_LEAD[o.pay] || DONE_LEAD.online;
+      $('#qrPay').hidden = !isQr;
+      if (isQr) renderQrPay(o);
+      // ?& 는 아이폰과 안드로이드 문자 앱 둘 다에서 본문이 들어가게 하는 방식
+      $('#smsBtn').href = `sms:${digits(STORE.orderPhone)}?&body=${encodeURIComponent(orderText(o))}`;
+      openSheet('doneSheet');
+    }
+
+    /* ----- QR 결제 화면 ----- */
+    function qrSvg(id) {
+      const tpl = document.getElementById(`qr-${id}`);
+      return tpl ? tpl.innerHTML.trim() : '';
+    }
+    function renderQrPay(o) {
+      $('#qrPay').innerHTML = `
+        <div class="qrpay-amount"><span>결제 앱에 넣을 금액</span><b>${won(o.total)}</b></div>
+        <div class="qr-grid">${QR_PAY.map(q => `
+          <figure class="qr-card">
+            <h3>${esc(q.title)}</h3>
+            <div class="qr-img" role="img" aria-label="${esc(q.title)} 결제 QR">${qrSvg(q.id)}</div>
+            <figcaption><small>${esc(q.note)}</small></figcaption>
+            <button type="button" class="linkish" data-save-qr="${q.id}">QR 이미지 저장</button>
+          </figure>`).join('')}
+        </div>
+        <p class="qrpay-tip">PC로 주문했다면 이 화면의 QR을 휴대폰 결제 앱으로 찍으면 돼요. 휴대폰 하나뿐이라면 QR 이미지를 저장하고, 결제 앱에 사진에서 QR 불러오기가 있으면 그걸로 결제할 수 있어요.</p>`;
+    }
+    // QR을 PNG 로 저장 (휴대폰 갤러리에 저장해서 결제 앱에서 불러오기용)
+    function saveQr(id) {
+      const svg = qrSvg(id).replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" ');
+      const img = new Image();
+      img.onload = () => {
+        const c = document.createElement('canvas');
+        c.width = c.height = 600;
+        const ctx = c.getContext('2d');
+        ctx.fillStyle = '#fff';
+        ctx.fillRect(0, 0, 600, 600);
+        ctx.imageSmoothingEnabled = false;
+        ctx.drawImage(img, 0, 0, 600, 600);
+        const a = document.createElement('a');
+        a.href = c.toDataURL('image/png');
+        a.download = `${STORE.name}_${id}_QR.png`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        toast('QR 이미지를 저장했어요');
+      };
+      img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+    }
+    function finishOrder() {
+      cart = [];
+      saveCart();
+      renderCartUI();
+      $('#orderForm').reset();
+      renderPayments();
+      currentOrder = null;
+      orderSent = false;
+      toast('장바구니를 비웠어요');
+    }
+    async function copyText(text) {
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch (e) {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch (err) { /* 무시 */ }
+        ta.remove();
+      }
+    }
+
+    let toastTimer;
+    function toast(msg) {
+      const t = $('#toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove('show'), 1800);
+    }
+
+    /* ----- 이벤트 연결 ----- */
+    $('#tabs').addEventListener('click', e => {
+      const b = e.target.closest('[data-cat]');
+      if (!b) return;
+      activeCat = b.dataset.cat;
+      renderTabs();
+      renderMenu();
+      const top = $('#menu').getBoundingClientRect().top + window.scrollY - 112;
+      if (window.scrollY > top) window.scrollTo({ top, behavior: 'smooth' });
+    });
+
+    // − / + / 담기 버튼. 버튼이 다시 그려져도 같은 자리에 포커스 유지
+    function handleStep(root, e) {
+      const b = e.target.closest('[data-step]');
+      if (!b) return false;
+      const { id, step } = b.dataset;
+      changeQty(id, Number(step));
+      const again = $(`[data-id="${id}"][data-step="${step}"]`, root) || $(`[data-id="${id}"][data-step]`, root);
+      if (again) again.focus();
+      return true;
+    }
+    $('#menu').addEventListener('click', e => handleStep($('#menu'), e));
+
+    $('#cartBody').addEventListener('click', e => {
+      if (handleStep($('#cartBody'), e)) return;
+      const r = e.target.closest('[data-remove]');
+      if (r) { removeLine(r.dataset.remove); return; }
+      if (e.target.closest('#toCheckout')) openCheckout();
+    });
+
+    document.addEventListener('click', e => {
+      const c = e.target.closest('[data-close]');
+      if (c) { closeSheet(c.closest('.overlay')); return; }
+      const o = e.target.closest('[data-open]');
+      if (o) { openSheet(o.dataset.open); return; }
+      if (e.target.classList && e.target.classList.contains('overlay')) closeSheet(e.target);
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeSheet($('.overlay.open'));
+    });
+
+    $('#fDate').addEventListener('change', renderTimes);
+    // 칸을 고치면 그 칸 오류는 바로 지우기
+    $('#orderForm').addEventListener('input', e => {
+      const key = Object.keys(FIELD_IDS).find(k => FIELD_IDS[k] === e.target.id);
+      if (!key) return;
+      $(`[data-err="${key}"]`).textContent = '';
+      e.target.removeAttribute('aria-invalid');
+    });
+
+    $('#orderForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      clearErrors();
+      const data = {
+        name: $('#fName').value.trim(),
+        phone: $('#fPhone').value.trim(),
+        memo: $('#fMemo').value.trim(),
+        dateOffset: Number($('#fDate').value),
+        time: $('#fTime').value,
+        pay: ($('input[name=pay]:checked') || {}).value,
+      };
+
+      let ok = true;
+      if (!data.time) { showErr('time', '고를 수 있는 시간이 없어요. 다른 날짜를 골라주세요.'); ok = false; }
+      if (!data.name) { showErr('name', '이름을 적어주세요.'); ok = false; }
+      if (!/^0\d{1,2}-?\d{3,4}-?\d{4}$/.test(data.phone)) { showErr('phone', '연락처를 010-1234-5678 형식으로 적어주세요.'); ok = false; }
+      if (!data.pay) { showErr('form', '결제 방법을 골라주세요.'); ok = false; }
+      if (!$('#fAgree').checked) { showErr('agree', '동의해야 주문할 수 있어요.'); ok = false; }
+      if (!ok) {
+        const first = $$('#orderForm [data-err]').find(el => el.textContent);
+        if (first && first.scrollIntoView) first.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        return;
+      }
+
+      const order = buildOrder(data);
+      if (data.pay === 'online') {
+        try { await requestOnlinePayment(order); }
+        catch (err) { showErr('form', err.message); return; }
+      }
+      showDone(order);
+    });
+
+    $('#qrPay').addEventListener('click', e => {
+      const b = e.target.closest('[data-save-qr]');
+      if (b) saveQr(b.dataset.saveQr);
+    });
+    $('#smsBtn').addEventListener('click', () => { orderSent = true; });
+    $('#copyBtn').addEventListener('click', async () => {
+      if (!currentOrder) return;
+      await copyText(orderText(currentOrder));
+      orderSent = true;
+      toast('주문 내용을 복사했어요');
+    });
+
+    /* ----- 시작 ----- */
+    renderStore();
+    renderTabs();
+    renderMenu();
+    renderPayments();
+    renderCartUI();
+  </script>
+</body>
+
+</html>
